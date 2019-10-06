@@ -13,6 +13,10 @@ func main() {
 		c.String(http.StatusOK, "pong")
 	})
 
+	engine.GET("/hello", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"message": "Hello Gin Framework"})
+	})
+
 	engine.Run(port())
 }
 
