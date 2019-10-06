@@ -17,6 +17,26 @@ func main() {
 		c.JSON(http.StatusOK, gin.H{"message": "Hello Gin Framework"})
 	})
 
+	engine.GET("/api/books", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"message": "Hello Gin Framework"})
+	})
+
+	engine.POST("/api/books", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"message": "Hello Gin Framework"})
+	})
+
+	engine.GET("/api/books/:isbn", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"message": "Hello Gin Framework"})
+	})
+
+	engine.PUT("/api/books/:isbn", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"message": "Hello Gin Framework"})
+	})
+
+	engine.DELETE("/api/books/:isbn", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"message": "Hello Gin Framework"})
+	})
+
 	engine.Run(port())
 }
 
