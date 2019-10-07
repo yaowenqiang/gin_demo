@@ -8,6 +8,14 @@ import (
 )
 
 func main() {
+	r := gin.Default()
+	//gin.New
+
+	r.GET("/", func (c *gin.Context) {
+		c.String(http.StatusOK, "Hello from %v", "Gin")
+	})
+	r.Run(":3000")
+	/*
 	engine := gin.Default()
 	engine.GET("/ping", func(c *gin.Context) {
 		c.String(http.StatusOK, "pong")
@@ -37,7 +45,8 @@ func main() {
 		c.JSON(http.StatusOK, gin.H{"message": "Hello Gin Framework"})
 	})
 
-	engine.Run(port())
+	//engine.Run(port())
+	*/
 }
 
 func port() string {
