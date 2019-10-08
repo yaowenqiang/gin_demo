@@ -10,9 +10,11 @@ import (
 func main() {
 	r := gin.Default()
 	//gin.New
+	r.LoadHTMLGlob("templates/**/*.html")
 
 	r.GET("/", func (c *gin.Context) {
-		c.String(http.StatusOK, "Hello from %v", "Gin")
+		//c.String(http.StatusOK, "Hello from %v", "Gin")
+		c.HTML(http.StatusOK, "index.html", nil)
 	})
 	r.Run(":3000")
 	/*
