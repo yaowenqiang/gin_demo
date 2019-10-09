@@ -9,6 +9,7 @@ import (
 
 func main() {
 	r := gin.Default()
+
 	//gin.New
 	r.LoadHTMLGlob("templates/**/*.html")
 
@@ -21,6 +22,11 @@ func main() {
 	admin.GET("/", func (c *gin.Context) {
 		c.HTML(http.StatusOK, "admin-overview.html", nil)
 	})
+
+	r.StaticFS("/static", http.Dir("static"))
+
+	//r.StaticFS("/publc",http.Dir("./public"))
+
 	r.Run(":3000")
 	/*
 	engine := gin.Default()
