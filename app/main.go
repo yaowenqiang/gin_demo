@@ -1,33 +1,12 @@
 package main
 
 import (
-	"net/http"
 	"os"
-
-	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	r := gin.Default()
 
-	//gin.New
-	r.LoadHTMLGlob("templates/**/*.html")
-
-	r.GET("/", func (c *gin.Context) {
-		//c.String(http.StatusOK, "Hello from %v", "Gin")
-		c.HTML(http.StatusOK, "index.html", nil)
-	})
-
-	admin := r.Group("/admin")
-	admin.GET("/", func (c *gin.Context) {
-		c.HTML(http.StatusOK, "admin-overview.html", nil)
-	})
-
-	r.StaticFS("/static", http.Dir("static"))
-
-	//r.StaticFS("/publc",http.Dir("./public"))
-
-	r.Run(":3000")
+	r := RegisterRoutes()
 	/*
 	engine := gin.Default()
 	engine.GET("/ping", func(c *gin.Context) {
@@ -58,8 +37,8 @@ func main() {
 		c.JSON(http.StatusOK, gin.H{"message": "Hello Gin Framework"})
 	})
 
-	//engine.Run(port())
 	*/
+	r.Run("3000")
 }
 
 func port() string {
