@@ -22,7 +22,10 @@ func RegisterRoutes() *gin.Engine {
 		c.String(http.StatusOK, id, nil)
 	})
 
-	admin := r.Group("/admin")
+	//http --auth admin:admin --auth-type basic "localhost:3001/admin/"
+	admin := r.Group("/admin", gin.BasicAuth(gin.Accounts{
+		"admin": "admin",
+	}))
 	admin.GET("/", func (c *gin.Context) {
 		c.HTML(http.StatusOK, "admin-overview.html", nil)
 	})
