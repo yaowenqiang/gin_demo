@@ -36,7 +36,8 @@ func RegisterRoutes() *gin.Engine {
 			c.String(http.StatusNotFound, "404 - Not Found")
 		}
 		//c.String(http.StatusOK, id, nil)
-		c.HTML(http.StatusOK, "admin-employee-edit.html", map[string]interface{}{
+		//c.HTML(http.StatusOK, "admin-employee-edit.html", map[string]interface{}{
+		c.HTML(http.StatusOK, "admin-employee-edit.html", gin.H{
 			"Employee": employee,
 		})
 	})
