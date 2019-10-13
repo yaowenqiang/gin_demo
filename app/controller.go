@@ -41,6 +41,23 @@ func RegisterRoutes() *gin.Engine {
 		})
 	})
 
+	r.POST("/employees/:id/vacation/add", func(c *gin.Context) {
+		var timeOff TimeOff
+		err := c.BindJSON(&timeOff)
+		if err != nil {
+			c.String(http.StatusBadRequest, err.Error())
+			return
+		}
+		id := c.Param("id")
+		timesOff, ok  := TimesOff[id]
+		if !ok {
+			TimesOff[id] = []TimeOff{}
+		}
+
+		TimesOff[id] = append(timesOff, timeOff)
+
+	})
+
 	r.POST("/employees/:id", func(c *gin.Context) {
 		id := c.Param("id")
 		if id == "add" {
