@@ -3,7 +3,7 @@ package main
 import (
 	"net/http"
 	"time"
-	_ "log"
+	"log"
 	"github.com/gin-gonic/gin"
 )
 
@@ -52,10 +52,12 @@ func RegisterRoutes() *gin.Engine {
 	r.Any("/login", func(c *gin.Context) {
 		employeeNumber := c.PostForm("employeeNumber")
 		password  := c.PostForm("password")
+		log.Printf("identities: %v", identities)
 
 		for _, identity := range identities {
 			if identity.employeeNumber == employeeNumber  && 
 			identity.password == password {
+				log.Print("employ matched")
 				lc := loginCookie{
 					value: employeeNumber,
 					expiration: time.Now().Add(24 * time.Hour),
@@ -65,8 +67,14 @@ func RegisterRoutes() *gin.Engine {
 				loginCookies[lc.value] = &lc
 				maxAge := lc.expiration.Unix() - time.Now().Unix()
 				c.SetCookie(loginCookieName,  lc.value, int(maxAge), "", "", false, true, )
+				log.Print("redirect to /")
 				c.Redirect(http.StatusTemporaryRedirect, "/")
-
+				return
+			} else {
+				log.Printf("identity = %v:", identity)
+				log.Printf("employeeNumber = %v:", employeeNumber)
+				log.Printf("password = %v:", password)
+				c.String(http.StatusBadRequest, "login failed", nil)
 				return
 			}
 		}

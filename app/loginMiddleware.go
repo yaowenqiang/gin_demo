@@ -1,6 +1,7 @@
 package main
 import (
 	"time"
+	"log"
 	"net/http"
 	"strings"
 	"github.com/gin-gonic/gin"
@@ -33,10 +34,12 @@ type loginCookie struct {
 func loginMiddleware(c *gin.Context) {
 	if strings.HasPrefix(c.Request.URL.Path, "/login") ||
 	strings.HasPrefix(c.Request.URL.Path, "/public") {
+		log.Print("url matched")
 		return
 	}
 
 	cookieValue, err := c.Cookie(loginCookieName)
+	log.Printf("cookieValue: %v", cookieValue)
 
 	if err != nil {
 		c.Redirect(http.StatusTemporaryRedirect, "/login")
@@ -44,6 +47,7 @@ func loginMiddleware(c *gin.Context) {
 	}
 
 	cookie, ok := loginCookies[cookieValue]
+	log.Printf("cookie: %v", cookie)
 
 	if !ok  || 
 		cookie.expiration.Unix() < time.Now().Unix() ||
