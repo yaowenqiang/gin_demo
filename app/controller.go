@@ -2,9 +2,8 @@ package main
 
 import (
 	"net/http"
-	"strconv"
-	"time"
-	"log"
+	_ "time"
+	_ "log"
 	"github.com/gin-gonic/gin"
 )
 
@@ -45,13 +44,8 @@ func RegisterRoutes() *gin.Engine {
 	r.POST("/employees/:id", func(c *gin.Context) {
 		id := c.Param("id")
 		if id == "add" {
-			pto, err := strconv.ParseFloat(c.PostForm("pto"), 32)
-			if err != nil {
-				c.String(http.StatusBadRequest, err.Error())
-				return
-			}
 
-			log.Print(pto)
+			/*
 			startDate, err := time.Parse("2006-01-02", c.PostForm("startDate"))
 			if err != nil {
 				c.String(http.StatusBadRequest, err.Error())
@@ -59,18 +53,22 @@ func RegisterRoutes() *gin.Engine {
 			}
 
 			log.Print(startDate)
+			*/
 
 			var emp Employee
+			err := c.Bind(&emp)
+			if err != nil {
+				c.String(http.StatusBadRequest, err.Error())
+				return
+			}
+
 			emp.ID = 42
-			emp.FirstName = c.PostForm("firstName")
-			emp.LastName = c.PostForm("lastName")
-			emp.Position = c.PostForm("position")
 			emp.Status = "Active"
-			emp.TotalPTO = float32(pto)
-			emp.StartDate = startDate
+			//emp.StartDate = startDate
 			employees["42"] = emp
 			
-			c.Redirect(http.StatusBadRequest, "/admin/employees/1")
+			c.Redirect(http.StatusPermanentRedirect, "/employees/42")
+			return
 
 
 
