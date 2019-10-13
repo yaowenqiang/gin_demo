@@ -2,7 +2,7 @@ package main
 
 import (
 	"net/http"
-	_ "time"
+	"time"
 	_ "log"
 	"github.com/gin-gonic/gin"
 )
@@ -11,10 +11,11 @@ import (
 func RegisterRoutes() *gin.Engine {
 
 	r := gin.Default()
+	r.Use(loginMiddleware)
 	//gin.New
 	r.LoadHTMLGlob("templates/**/*.html")
 
-	r.GET("/", func (c *gin.Context) {
+	r.Any("/", func (c *gin.Context) {
 		//c.String(http.StatusOK, "Hello from %v", "Gin")
 		c.HTML(http.StatusOK, "index.html", nil)
 	})
@@ -40,6 +41,36 @@ func RegisterRoutes() *gin.Engine {
 		c.HTML(http.StatusOK, "admin-employee-edit.html", gin.H{
 			"Employee": employee,
 		})
+	})
+
+	/*
+	r.GET("/login", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "login.html", nil)
+	})
+	*/
+
+	r.Any("/login", func(c *gin.Context) {
+		employeeNumber := c.PostForm("employeeNumber")
+		password  := c.PostForm("password")
+
+		for _, identity := range identities {
+			if identity.employeeNumber == employeeNumber  && 
+			identity.password == password {
+				lc := loginCookie{
+					value: employeeNumber,
+					expiration: time.Now().Add(24 * time.Hour),
+					origin: c.Request.RemoteAddr,
+				}
+
+				loginCookies[lc.value] = &lc
+				maxAge := lc.expiration.Unix() - time.Now().Unix()
+				c.SetCookie(loginCookieName,  lc.value, int(maxAge), "", "", false, true, )
+				c.Redirect(http.StatusTemporaryRedirect, "/")
+
+				return
+			}
+		}
+		c.HTML(http.StatusOK, "login.html", nil)
 	})
 
 	r.POST("/employees/:id/vacation/add", func(c *gin.Context) {
