@@ -57,6 +57,7 @@ func RegisterRoutes() *gin.Engine {
 
 		TimesOff[id] = append(timesOff, timeOff)
 
+		c.JSON(http.StatusCreated, &timeOff)
 	})
 
 	r.POST("/employees/:id", func(c *gin.Context) {
