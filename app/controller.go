@@ -32,7 +32,14 @@ func RegisterRoutes() *gin.Engine {
 			c.String(http.StatusOK, "add", nil)
 			return
 		}
-		c.String(http.StatusOK, id, nil)
+		employee, ok := employees[id]
+		if !ok {
+			c.String(http.StatusNotFound, "404 - Not Found")
+		}
+		//c.String(http.StatusOK, id, nil)
+		c.HTML(http.StatusOK, "admin-employee-edit.html", map[string]interface{}{
+			"Employee": employee,
+		})
 	})
 
 	r.POST("/employees/:id", func(c *gin.Context) {
@@ -52,6 +59,16 @@ func RegisterRoutes() *gin.Engine {
 			}
 
 			log.Print(startDate)
+
+			var emp Employee
+			emp.ID = 42
+			emp.FirstName = c.PostForm("firstName")
+			emp.LastName = c.PostForm("lastName")
+			emp.Position = c.PostForm("position")
+			emp.Status = "Active"
+			emp.TotalPTO = float32(pto)
+			emp.StartDate = startDate
+			employees["42"] = emp
 			
 			c.Redirect(http.StatusBadRequest, "/admin/employees/1")
 
