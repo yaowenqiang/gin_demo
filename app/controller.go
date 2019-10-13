@@ -2,6 +2,9 @@ package main
 
 import (
 	"net/http"
+	"strconv"
+	"time"
+	"log"
 	"github.com/gin-gonic/gin"
 )
 
@@ -21,6 +24,49 @@ func RegisterRoutes() *gin.Engine {
 		id := c.Param("id")
 		c.String(http.StatusOK, id, nil)
 	})
+
+
+	r.GET("/employees/:id", func(c *gin.Context) {
+		id := c.Param("id")
+		if id == "add" {
+			c.String(http.StatusOK, "add", nil)
+			return
+		}
+		c.String(http.StatusOK, id, nil)
+	})
+
+	r.POST("/employees/:id", func(c *gin.Context) {
+		id := c.Param("id")
+		if id == "add" {
+			pto, err := strconv.ParseFloat(c.PostForm("pto"), 32)
+			if err != nil {
+				c.String(http.StatusBadRequest, err.Error())
+				return
+			}
+
+			log.Print(pto)
+			startDate, err := time.Parse("2006-01-02", c.PostForm("startDate"))
+			if err != nil {
+				c.String(http.StatusBadRequest, err.Error())
+				return
+			}
+
+			log.Print(startDate)
+			
+			c.Redirect(http.StatusBadRequest, "/admin/employees/1")
+
+
+
+		}
+		c.String(http.StatusOK, id, nil)
+	})
+
+	/*
+	this route won't work, conflic with /employees/:id
+	r.GET("/employees/add", func(c *gin.Context) {
+		c.String(http.StatusOK, "add", nil)
+	})
+	*/
 
 	//http --auth admin:admin --auth-type basic "localhost:3001/admin/"
 	admin := r.Group("/admin", gin.BasicAuth(gin.Accounts{
